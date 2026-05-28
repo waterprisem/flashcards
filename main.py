@@ -1,8 +1,8 @@
 import pandas as pd
-
+import random
 from tkinter import *
 
-
+#csv file functions
 def read_vocab_data():
     df = pd.read_csv('vocab_list.csv')
     print(df.to_string())  #print the entire DataFrame to the console
@@ -12,15 +12,14 @@ def add_vocab(term, definition):
     new_row = pd.DataFrame({'Word': [term], 'Definition': [definition]}) # create a new DataFrame for the new row
     df = pd.concat([df, new_row], ignore_index=True) # concatenate the new row to the existing DataFrame
     df.to_csv('vocab_list.csv', mode='a', header=False, index=False) # append the new row to the CSV file without writing the header and index
-    
 
 def delete_vocab(index):
-    #delete by index
-    
     df = pd.read_csv('vocab_list.csv') # read the CSV file into a DataFrame
     df = df.drop(index).reset_index(drop=True) # drop the row at the specified index
     df.to_csv('vocab_list.csv', index=False) # write the updated DataFrame back to the CSV file without the index
 
+
+## vocab listbox functions
 def update_vocab_listbox():
     word_listbox.delete(0, END) # clear the existing items in the listbox
     df = pd.read_csv('vocab_list.csv') # read the CSV file into a DataFrame
@@ -51,7 +50,48 @@ def delete_vocab_listbox():
     if vocab_index is not None:
         delete_vocab(vocab_index)
     update_vocab_listbox() # update the listbox to reflect the deletion
-    
+
+
+##flashcard functions
+def flip_flashcard():
+    current_text = flash_card_text.get()
+    df = pd.read_csv('vocab_list.csv')
+    if current_text in df['Word'].values:
+        definition = df[df['Word'] == current_text]['Definition'].values[0]
+        flash_card_text.set(definition)
+    else:
+        word = df[df['Definition'] == current_text]['Word'].values[0]
+        flash_card_text.set(word)
+
+def mark_answer_correct():
+    df = pd.read_csv('vocab_list.csv')
+    current_text = flash_card_text.get()
+    if current_text in df['Word'].values:
+        #update score for the word in the DataFrame (e.g., increment a "correct" column)
+        df.loc[df['Word'] == current_text, 'Correct'] = df.loc[df['Word'] == current_text, 'Correct'].fillna(0) + 1
+        df.loc[df['Word'] == current_text, 'Attempts'] = df.loc[df['Word'] == current_text, 'Attempts'].fillna(0) + 1
+    else:
+        #update score for the definition in the DataFrame (e.g., increment a "correct" column)
+        df.loc[df['Definition'] == current_text, 'Correct'] = df.loc[df['Definition'] == current_text, 'Correct'].fillna(0) + 1
+        df.loc[df['Definition'] == current_text, 'Attempts'] = df.loc[df['Definition'] == current_text, 'Attempts'].fillna(0) + 1
+    df.to_csv('vocab_list.csv', index=False) # save the updated DataFrame back to the CSV file
+    next_flashcard() # move to the next flashcard after marking the answer as correct
+
+def mark_answer_wrong():
+    df = pd.read_csv('vocab_list.csv')
+    current_text = flash_card_text.get()
+    if current_text in df['Word'].values:
+        df.loc[df['Word'] == current_text, 'Attempts'] = df.loc[df['Word'] == current_text, 'Attempts'].fillna(0) + 1
+    else:
+        df.loc[df['Definition'] == current_text, 'Attempts'] = df.loc[df['Definition'] == current_text, 'Attempts'].fillna(0) + 1
+    df.to_csv('vocab_list.csv', index=False) 
+    next_flashcard() # move to the next flashcard after marking the answer as wrong
+
+def next_flashcard():
+    df = pd.read_csv('vocab_list.csv')
+    if not df.empty:
+        random_row = df.sample(n=1).iloc[0] # select a random row from the DataFrame
+        flash_card_text.set(random_row['Word']) # set the flashcard text to the selected word
 
 ##Tkinter GUI setup
 root = Tk()
@@ -77,6 +117,18 @@ add_vocab_button = Button(word_list_labelframe, text="Add", command=add_new_voca
 add_vocab_button.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 
 
+flashcard_menu_labelframe = LabelFrame(mainframe, text="Flashcard")
+flashcard_menu_labelframe.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+flash_card_text = StringVar()
+flash_card_button = Button(flashcard_menu_labelframe, textvariable=flash_card_text, command=flip_flashcard)
+flash_card_button.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+answer_correct_button = Button(flashcard_menu_labelframe, text="Correct", command=mark_answer_correct)
+answer_correct_button.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+answer_wrong_button = Button(flashcard_menu_labelframe, text="Wrong", command=mark_answer_wrong)
+answer_wrong_button.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+flash_card_text.set("test")
 update_vocab_listbox()
 
 #gridding
