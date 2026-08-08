@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>wowowow flashcard app</h1>
+
+        <div class="flashcard-container">
+            <div class="flashcard-controls">
+                <button class="btn btn-secondary btn-icon-only" onclick="prevCard()" aria-label="Previous Card">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="card-face front">Question goes here</div>
+                    <div class="card-face back">Answer goes here</div>
+                </div>
+                <button class="btn btn-secondary btn-icon-only" onclick="nextCard()" aria-label="Next Card">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <p id="cardCounter" class="text-muted">0/0</p>
+        </div>
+
+        <div class="set-selection-container">
+            <div class="set-column">
+                <div class="set-column-header">
+                    <h3>Select Flashcard Set</h3>
+                    <button class="btn btn-primary" onclick="openAddSetModal()">+ Add Set</button>
+                </div>
+                <div id="setList" class="set-panel">
+                    <ul id="flashcardSetsList">
+                        <li class="text-muted">No flashcard sets available</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="set-column">
+                <div class="set-column-header">
+                    <h3>Selected Set Preview</h3>
+                    <button class="btn btn-primary" onclick="openAddCardModal()">+ Add Card</button>
+                </div>
+                <div id="flashcardList" class="set-panel">
+                    <ul id="flashcardItems">
+                        <li class="text-muted">No flashcards available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="addSetModal" class="modal hidden">
+            <div class="create-set-modal">
+                <span class="close" onclick="closeAddSetModal()">&times;</span>
+                <h2>Create New Set</h2>
+                <p class="text-muted">Enter the name of your new set and the words with their definitions in the format: word - definition. Each word-definition pair should be on a new line.</p>
+                <input type="text" id="setName" placeholder="Set Name">
+                <textarea id="setContent" placeholder="Enter words and definitions in the format: word - definition"></textarea>
+                <button class="btn btn-primary" onclick="createNewSet()">Create Set</button>
+            </div>
+        </div>
+        <div id="addCardModal" class="modal hidden">
+            <div class="add-card-modal">
+                <span class="close" onclick="closeAddCardModal()">&times;</span>
+                <h2>Add New Card</h2>
+                <input type="text" id="cardQuestion" placeholder="Question">
+                <input type="text" id="cardAnswer" placeholder="Answer">
+                <button class="btn btn-primary" onclick="addNewCard()">Add Card</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

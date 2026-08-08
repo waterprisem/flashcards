@@ -2,27 +2,28 @@ import pandas as pd
 import random
 from tkinter import *
 
+
 #csv file functions
 def read_vocab_data():
-    df = pd.read_csv('vocab_list.csv')
+    df = pd.read_csv('tkinter version/vocab_list.csv')
     print(df.to_string())  #print the entire DataFrame to the console
 
 def add_vocab(term, definition):
     df = pd.DataFrame(columns=['Word', 'Definition']) #create an empty DataFrame with the specified columns
     new_row = pd.DataFrame({'Word': [term], 'Definition': [definition]}) # create a new DataFrame for the new row
     df = pd.concat([df, new_row], ignore_index=True) # concatenate the new row to the existing DataFrame
-    df.to_csv('vocab_list.csv', mode='a', header=False, index=False) # append the new row to the CSV file without writing the header and index
+    df.to_csv('tkinter version/vocab_list.csv', mode='a', header=False, index=False) # append the new row to the CSV file without writing the header and index
 
 def delete_vocab(index):
-    df = pd.read_csv('vocab_list.csv') # read the CSV file into a DataFrame
+    df = pd.read_csv('tkinter version/vocab_list.csv') # read the CSV file into a DataFrame
     df = df.drop(index).reset_index(drop=True) # drop the row at the specified index
-    df.to_csv('vocab_list.csv', index=False) # write the updated DataFrame back to the CSV file without the index
+    df.to_csv('tkinter version/vocab_list.csv', index=False) # write the updated DataFrame back to the CSV file without the index
 
 
 ## vocab listbox functions
 def update_vocab_listbox():
     word_listbox.delete(0, END) # clear the existing items in the listbox
-    df = pd.read_csv('vocab_list.csv') # read the CSV file into a DataFrame
+    df = pd.read_csv('tkinter version/vocab_list.csv') # read the CSV file into a DataFrame
     for index, row in df.iterrows(): # iterate through each row in the DataFrame
         word_listbox.insert(END, row['Word']) # insert the 'Word' column value into the listbox
 
@@ -40,7 +41,7 @@ def get_selected_vocab():
     if selected_index:
         index = selected_index[0]  # convert tuple to integer
         selected_word = word_listbox.get(index)
-        df = pd.read_csv('vocab_list.csv')
+        df = pd.read_csv('tkinter version/vocab_list.csv')
         definition = df.iloc[index]['Definition']
         print(f"Selected Word: {selected_word}, Definition: {definition}")
         return index
@@ -55,7 +56,7 @@ def delete_vocab_listbox():
 ##flashcard functions
 def flip_flashcard():
     current_text = flash_card_text.get()
-    df = pd.read_csv('vocab_list.csv')
+    df = pd.read_csv('tkinter version/vocab_list.csv')
     if current_text in df['Word'].values:
         definition = df[df['Word'] == current_text]['Definition'].values[0]
         flash_card_text.set(definition)
@@ -64,7 +65,7 @@ def flip_flashcard():
         flash_card_text.set(word)
 
 def mark_answer_correct():
-    df = pd.read_csv('vocab_list.csv')
+    df = pd.read_csv('tkinter version/vocab_list.csv')
     current_text = flash_card_text.get()
     if current_text in df['Word'].values:
         #update score for the word in the DataFrame (e.g., increment a "correct" column)
@@ -74,21 +75,21 @@ def mark_answer_correct():
         #update score for the definition in the DataFrame (e.g., increment a "correct" column)
         df.loc[df['Definition'] == current_text, 'Correct'] = df.loc[df['Definition'] == current_text, 'Correct'].fillna(0) + 1
         df.loc[df['Definition'] == current_text, 'Attempts'] = df.loc[df['Definition'] == current_text, 'Attempts'].fillna(0) + 1
-    df.to_csv('vocab_list.csv', index=False) # save the updated DataFrame back to the CSV file
+    df.to_csv('tkinter version/vocab_list.csv', index=False) # save the updated DataFrame back to the CSV file
     next_flashcard() # move to the next flashcard after marking the answer as correct
 
 def mark_answer_wrong():
-    df = pd.read_csv('vocab_list.csv')
+    df = pd.read_csv('tkinter version/vocab_list.csv')
     current_text = flash_card_text.get()
     if current_text in df['Word'].values:
         df.loc[df['Word'] == current_text, 'Attempts'] = df.loc[df['Word'] == current_text, 'Attempts'].fillna(0) + 1
     else:
         df.loc[df['Definition'] == current_text, 'Attempts'] = df.loc[df['Definition'] == current_text, 'Attempts'].fillna(0) + 1
-    df.to_csv('vocab_list.csv', index=False) 
+    df.to_csv('tkinter version/vocab_list.csv', index=False) 
     next_flashcard() # move to the next flashcard after marking the answer as wrong
 
 def next_flashcard():
-    df = pd.read_csv('vocab_list.csv')
+    df = pd.read_csv('tkinter version/vocab_list.csv')
     if not df.empty:
         random_row = df.sample(n=1).iloc[0] # select a random row from the DataFrame
         flash_card_text.set(random_row['Word']) # set the flashcard text to the selected word
