@@ -28,4 +28,6 @@ Tkinter Version
 3. lwk realize that this was a good framework to getting me started, but that I scrapped finishing it there since it wouldn't be web playable
 
 ## Other
-The goal of this project was to try and to actually learn the basics of html, css, and js in a real working project, as minimal ai gen code as possible. Although it was used to help with debugging and keeping code as close to professional and clean as possible. Also to learn like data related stuff, cuz that's what a lot of coding is.
+The goal of this project was to try and to actually learn the basics of html, css, and js in a real working project, as minimal ai gen code as possible.
+
+AI - Used to help with debugging, learning, and how to code cleaner
