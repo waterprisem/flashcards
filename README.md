@@ -2,6 +2,9 @@
 
 omg amazing flashcard app that you can locally make flash cards and sets and its a web app?!?! 
 
+## Demo Link
+https://waterprisem.github.io/flashcards/
+
 ## Features
 - Click the flashcard, and navigate back and forth between cards
 - Make flashcard sets, and add/remove flashcards to those sets
